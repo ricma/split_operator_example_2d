@@ -1,0 +1,3 @@
+* Example on Using Split Operators in 2D Scattering Problems
+
+The code here was written during a live session. Once finished, it will show the time evolution of a quantum wave packet inbound on an obstacle.
