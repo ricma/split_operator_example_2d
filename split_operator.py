@@ -135,14 +135,17 @@ norm_psi_0 = np.prod(delta_q) * np.sum(np.abs(psi_0) ** 2)
 expectation_q = np.prod(delta_q) * np.sum(
     np.abs(psi_0.flatten()[:, np.newaxis]) ** 2 *
     grid.reshape((-1, 2)), axis=0)
+expectation_V = np.prod(delta_q) * np.sum(np.abs(psi_0) ** 2 * V)
 
 _, delta_p, p_grid, _ = p_grid_from_q_grid(hbar, grid)
 psi_0_p = p_representation(hbar, grid, psi_0)
+T = kinetic(p_grid)
 
 norm_psi_0_p = np.prod(delta_p) * np.sum(np.abs(psi_0_p.flatten()) ** 2)
 expectation_p = np.prod(delta_p) * np.sum(
     np.abs(psi_0_p.flatten()[:, np.newaxis]) ** 2 *
     p_grid.reshape((-1, 2)), axis=0)
+expectation_T = np.prod(delta_p) * np.sum(np.abs(psi_0_p) ** 2 * T)
 
 np.testing.assert_array_almost_equal(
     norm_psi_0, 1.0,
