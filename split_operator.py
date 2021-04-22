@@ -119,7 +119,6 @@ y = np.linspace(-5, 5, 65)
 grid = np.array(np.meshgrid(
     x, y, indexing='ij')).transpose(
         (1, 2, 0))
-delta_q = grid[1, 1] - grid[0, 0]
 
 V = potential(grid)
 
@@ -131,10 +130,19 @@ psi_0 = coherent_state(
     grid, q_0, p_0, hbar)
 
 # check normalization and expectation value for q₀
+delta_q = grid[1, 1] - grid[0, 0]
 norm_psi_0 = np.prod(delta_q) * np.sum(np.abs(psi_0) ** 2)
 expectation_q = np.prod(delta_q) * np.sum(
     np.abs(psi_0.flatten()[:, np.newaxis]) ** 2 *
     grid.reshape((-1, 2)), axis=0)
+
+_, delta_p, p_grid, _ = p_grid_from_q_grid(hbar, grid)
+psi_0_p = p_representation(hbar, grid, psi_0)
+
+norm_psi_0_p = np.prod(delta_p) * np.sum(np.abs(psi_0_p.flatten()) ** 2)
+expectation_p = np.prod(delta_p) * np.sum(
+    np.abs(psi_0_p.flatten()[:, np.newaxis]) ** 2 *
+    p_grid.reshape((-1, 2)), axis=0)
 
 np.testing.assert_array_almost_equal(
     norm_psi_0, 1.0,
@@ -144,13 +152,14 @@ np.testing.assert_array_almost_equal(
     expectation_q, q_0,
     err_msg="Coherent state does not have correct ⟨ψ|q|ψ⟩ ≠ q₀")
 
-_, delta_p, p_grid, _ = p_grid_from_q_grid(hbar, grid)
-psi_0_p = p_representation(hbar, grid, psi_0)
-psi_0_q = p_representation(hbar, grid, psi_0_p)
+np.testing.assert_array_almost_equal(
+    norm_psi_0_p, 1.0,
+    err_msg=f"Initial state not normalized in p: ∫|⟨p|ψ⟩|²dp = {norm_psi_0_p} ≠ 1")
 
-# np.testing.assert_array_almost_equal(
-#     psi_0_q, psi_0,
-#     err_msg="Fourier trafo and inverse are not inverse")
+np.testing.assert_array_almost_equal(
+    expectation_p, p_0,
+    err_msg="Coherent state does not have correct ⟨ψ|p|ψ⟩ ≠ p₀")
+
 
 psi_1 = propagate(hbar, grid, psi_0, delta_t)
 
