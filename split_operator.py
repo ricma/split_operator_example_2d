@@ -163,6 +163,11 @@ np.testing.assert_array_almost_equal(
     expectation_p, p_0,
     err_msg="Coherent state does not have correct ⟨ψ|p|ψ⟩ ≠ p₀")
 
+psi_0_q = q_representation(hbar, grid, psi_0_p)
+
+np.testing.assert_array_almost_equal(
+    psi_0_q, psi_0,
+    err_msg="Fourier trafo and inverse are not inverse")
 
 psi_1 = propagate(hbar, grid, psi_0, delta_t)
 
