@@ -49,7 +49,7 @@ def p_grid_from_q_grid(hbar, grid):
     """
     q_0 = grid[0, 0]
     delta_q = grid[1, 1] - grid[0, 0]
-    Ns = grid.shape[:2]
+    Ns = np.array(grid.shape[:2])
 
     # choose p to be able to use FFT
     delta_p = 2 * np.pi * hbar / (Ns * delta_q)
@@ -87,10 +87,10 @@ def q_representation(hbar, grid, psi_p):
     """
     q_0 = grid[0, 0]
     delta_q = grid[1, 1] - grid[0, 0]
+    Ns = np.array(grid.shape[:2])
     p_0, delta_p, p_grid, indices = p_grid_from_q_grid(hbar, grid)
 
     a = np.exp(1j / hbar * p_grid @ q_0) * psi_p
-    Ns = grid.shape
     b = np.prod(Ns) * np.fft.ifft2(a)
 
     # calculate remaining phase factor
