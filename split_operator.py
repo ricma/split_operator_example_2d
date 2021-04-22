@@ -39,7 +39,7 @@ def coherent_state(grid, q_0, p_0, hbar, sigma=1.0):
     a = 2 * sigma ** 2
     C = np.sqrt(2 / (np.pi * a))
     return C * np.exp(
-        -np.sum((grid - q_0) ** 2, axis=-1) / a -
+        -np.sum((grid - q_0) ** 2, axis=-1) / a +
         1j * grid @ p_0 / hbar)
 
 
@@ -123,7 +123,7 @@ grid = np.array(np.meshgrid(
 V = potential(grid)
 
 delta_t = 0.01
-hbar = 0.01
+hbar = 0.1
 q_0 = np.array([0.0, 0.5])
 p_0 = np.array([1.0, 0.1])
 psi_0 = coherent_state(
